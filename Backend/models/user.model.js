@@ -94,11 +94,11 @@ userSchema.statics.hashPassword = async function (plainPassword) {
   }
 };
 
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    this.password = await userSchema.statics.hashPassword(this.password);
-  }
-  next();
-});
+// userSchema.pre('save', async function (next) {
+//   if (this.isModified('password')) {
+//     this.password = await userSchema.statics.hashPassword(this.password);
+//   }
+//   next();
+// });
 
 module.exports = mongoose.model('User', userSchema);

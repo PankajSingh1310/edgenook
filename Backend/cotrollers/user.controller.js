@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const registerUser = async (req, res) => {
 
-  const { fullname, email, password, address, college, city, state, pincode,phone } = req.body;
+  const { fullname, email, password, address, college, city, state, pincode, phone } = req.body;
 
   try {
     const existingUser = await userModel.findOne({ email });
@@ -57,23 +57,29 @@ const loginUser = async (req, res) => {
 
   try {
     const user = await userModel.findOne({ email });
+
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
+
     const isMatch = await userModel.comparePassword(password, user.password);
+
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
-    console.log("sahi chal rha hai 4");
+
     const token = userModel.generateAuthToken(user._id);
+
     if (!token) {
       return res.status(500).json({ message: 'Error generating token' });
     }
+
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
+    
     res.status(200).json({ message: 'User logged in successfully' });
   }
   catch (error) {
