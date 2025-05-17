@@ -1,7 +1,8 @@
+const blacklistTokenModel = require('../models/blacklistToken.model');
 const userModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
 
-const registerUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
 
   const { fullname, email, password, address, college, city, state, pincode, phone } = req.body;
 
@@ -34,7 +35,7 @@ const registerUser = async (req, res) => {
 
     console.log('User registered successfully:', newUser);
 
-    const token = userModel.generateAuthToken(newUser._id);
+    const token = newUser.generateAuthToken();
     if (!token) {
       return res.status(500).json({ message: 'Error generating token' });
     }
@@ -52,35 +53,46 @@ const registerUser = async (req, res) => {
   }
 }
 
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+module.exports.loginUser = async (req, res) => {
   try {
-    const user = await userModel.findOne({ email });
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    
+    const user = await userModel.findOne({ email }).select('+password');
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const isMatch = await userModel.comparePassword(password, user.password);
+    const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const token = userModel.generateAuthToken(user._id);
+    const token = await user.generateAuthToken();
 
     if (!token) {
       return res.status(500).json({ message: 'Error generating token' });
     }
-
+    console.log('token:', token);
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
-    
-    res.status(200).json({ message: 'User logged in successfully' });
+    // Remove password before sending user
+    const safeUser = user.toObject();
+    delete safeUser.password;
+    delete safeUser.__v;
+
+res.status(200).json({
+  message: 'User logged in successfully',
+  token,
+  user: safeUser
+});
   }
   catch (error) {
     console.error('Error logging in user:', error);
@@ -88,19 +100,32 @@ const loginUser = async (req, res) => {
   }
 }
 
-const logoutUser = async (req, res) => {
+module.exports.logoutUser = async (req, res) => {
   try {
-    res.clearCookie('token');
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+    await blacklistTokenModel.create({ token });
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production'
+    });
     res.status(200).json({ message: 'User logged out successfully' });
   } catch (error) {
-    console.error('Error logging out user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    // console.error('Error logging out user:', error);
+    res.status(500).json({ message: 'Internal server error' }); 
+    
   }
 }
 
-
-module.exports = {
-  registerUser,
-  loginUser,
-  logoutUser
+module.exports.userProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id).select('-password -__v');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ user });
+    
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
