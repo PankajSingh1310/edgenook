@@ -1,4 +1,5 @@
 const adminModel = require('../models/admin.model');
+const courseModel = require('../models/course.model');
 
 module.exports.adminLogin = async (req,res) => {
     try {
@@ -85,5 +86,48 @@ module.exports.userLists = async (req, res) => {
       });
     }
   };
-  
+
+
+module.exports.createCourse = async (req, res) => {
+  const { avatar, title, description, modules, duration, studentsGet } = req.body;
+
+  try {
+    // Check if course with same title already exists
+    const existingCourse = await courseModel.findOne({ title });
+    if (existingCourse) {
+      return res.status(400).json({ message: 'Course already exists' });
+    }
+
+    // Create new course
+    const newCourse = new courseModel({
+      avatar,
+      title,
+      description,
+      modules,
+      duration,
+      studentsGet
+    });
+
+    await newCourse.save();
+
+    // Link course to admin
+    const adminEmail = process.env.ADMIN_EMAIL;
+
+    const admin = await adminModel.findOne({ adminEmail });
+    if(!admin) {
+        return res.status(404).json({ message: 'unknown error' });
+    }
+
+    admin.courses.push(newCourse._id);
+    await admin.save();
+
+    console.log('Course created successfully:', newCourse);
+    res.status(201).json({ message: 'Course created successfully', course: newCourse });
+
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
   

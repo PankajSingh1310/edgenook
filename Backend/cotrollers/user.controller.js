@@ -1,7 +1,6 @@
 const adminModel = require('../models/admin.model');
 const blacklistTokenModel = require('../models/blacklistToken.model');
 const userModel = require('../models/user.model');
-const bcrypt = require('bcrypt');
 
 module.exports.registerUser = async (req, res) => {
 

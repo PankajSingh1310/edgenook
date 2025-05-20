@@ -40,7 +40,7 @@ module.exports.isAdmin = async (req, res, next) => {
     }
     try {
         const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-        const user = await adminModel.findById(decoded._id);
+        const user = await adminModel.findById(decoded.id);
         if (!user) {
             return res.status(401).json({ message: 'Invalid' });
         }

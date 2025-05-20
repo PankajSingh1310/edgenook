@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
+  avatar: {
+    type: String, 
+  },
+  
   title: {
     type: String,
     required: true,
@@ -9,11 +13,6 @@ const courseSchema = new mongoose.Schema({
 
   description: {
     type: String,  // Clear description of what's included
-    required: true,
-  },
-
-  plan: {       // Example: "₹499 Plan", "₹999 Plan"
-    type: String,
     required: true,
   },
 
