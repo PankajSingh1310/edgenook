@@ -9,7 +9,7 @@ const createAdmin = async () => {
         const password = process.env.DEFAULT_ADMIN_PASSWORD;
         const name = process.env.DEFAULT_ADMIN_NAME;
 
-        const existingAdmin = await adminModel.findOne({ email });
+        const existingAdmin = await adminModel.findOne({ adminEmail: email });
 
         if(existingAdmin) {
             console.log('Admin already exists');
@@ -18,7 +18,7 @@ const createAdmin = async () => {
         const hashedPassword = await adminModel.hashpassword(password);
         const admin = new adminModel({
             name: name,
-            email: email,
+            adminEmail: email,
             password: hashedPassword,
             role: 'admin',
             users : []

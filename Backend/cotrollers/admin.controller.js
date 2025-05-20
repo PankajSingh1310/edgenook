@@ -1,24 +1,24 @@
 const adminModel = require('../models/admin.model');
 const courseModel = require('../models/course.model');
+const mongoose = require('mongoose');
 
 module.exports.adminLogin = async (req,res) => {
     try {
-        const {email , password} = req.body;
+        const {adminEmail , password} = req.body;
 
-        if(!email || !password) {
+        if(!adminEmail || !password) {
             return res.status(400).json({
                 message: "All fields are required"
             })
         }
 
-        const admin = await adminModel.findOne({email}).select('+password');
+        const admin = await adminModel.findOne({adminEmail}).select('+password');
         if(!admin) {
             return res.status(400).json({
                 message: "Invalid email or password"
             })
         }
         const isMatch = await admin.comparePassword(password);
-        console.log(isMatch);
         if(!isMatch) {
             return res.status(400).json({
                 message: "Invalid email or password"
@@ -64,10 +64,10 @@ module.exports.adminLogout = async (req,res) => {
 
 module.exports.userLists = async (req, res) => {
     try {
-      const email = process.env.DEFAULT_ADMIN_EMAIL;
+      const adminEmail = process.env.DEFAULT_ADMIN_EMAIL;
   
       const admin = await adminModel
-        .findOne({ email })
+        .findOne({ adminEmail })
         .populate('users'); 
       if (!admin || !admin.users || admin.users.length === 0) {
         return res.status(404).json({
@@ -111,7 +111,7 @@ module.exports.createCourse = async (req, res) => {
     await newCourse.save();
 
     // Link course to admin
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL;
 
     const admin = await adminModel.findOne({ adminEmail });
     if(!admin) {
@@ -130,4 +130,71 @@ module.exports.createCourse = async (req, res) => {
   }
 };
 
+
+module.exports.updateCourse = async (req, res) => {
+  const { courseId } = req.params;
+  const { avatar, title, description, modules, duration, studentsGet } = req.body;
+
+  try {
+    // Check if course exists
+    const course = await courseModel.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    // Update course details
+    course.avatar = avatar || course.avatar;
+    course.title = title || course.title;
+    course.description = description || course.description;
+    course.modules = modules || course.modules;
+    course.duration = duration || course.duration;
+    course.studentsGet = studentsGet || course.studentsGet;
+
+    await course.save();
+
+    console.log('Course updated successfully:', course);
+    res.status(200).json({ message: 'Course updated successfully', course });
+
+  } catch (error) {
+    console.error('Error updating course:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+module.exports.deleteCourse = async (req, res) => {
+  const { courseId } = req.params;
+
+  try {
+
+    // Validate courseId
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: 'Invalid course ID' });
+    }
+
+    // Check if course exists
+    const course = await courseModel.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    // Delete course
+    await course.deleteOne();
+
+    // Remove course reference from admin
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL;
+    const admin = await adminModel.findOne({ adminEmail });
+    if (admin) {
+      admin.courses = admin.courses.filter(course => course.toString() !== courseId);
+      await admin.save();
+    }
+
+    console.log('Course deleted successfully:', course);
+    res.status(200).json({ message: 'Course deleted successfully' });
+
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
   

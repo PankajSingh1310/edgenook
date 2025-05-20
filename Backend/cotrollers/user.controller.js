@@ -15,7 +15,7 @@ module.exports.registerUser = async (req, res) => {
     if (!hashedPassword) {
       return res.status(500).json({ message: 'Error hashing password' });
     }
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL;
 
     const newUser = new userModel({
       fullname: {
