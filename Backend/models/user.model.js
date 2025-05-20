@@ -68,6 +68,14 @@ const userSchema = new mongoose.Schema(
       required: true,
       match: /^[6-9]\d{9}$/, // Assuming Indian phone number format
     },
+    // profilePic: {
+    //   type: String,
+    //   default: "default.jpg",
+    // },
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+    },
   },
   { timestamps: true }
 );

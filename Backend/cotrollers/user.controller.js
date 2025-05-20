@@ -1,3 +1,4 @@
+const adminModel = require('../models/admin.model');
 const blacklistTokenModel = require('../models/blacklistToken.model');
 const userModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
@@ -15,6 +16,7 @@ module.exports.registerUser = async (req, res) => {
     if (!hashedPassword) {
       return res.status(500).json({ message: 'Error hashing password' });
     }
+    const adminEmail = process.env.ADMIN_EMAIL;
 
     const newUser = new userModel({
       fullname: {
@@ -32,6 +34,15 @@ module.exports.registerUser = async (req, res) => {
     });
 
     await newUser.save();
+
+    const admin = await adminModel.findOne({ email: adminEmail });
+    if(!admin) {
+      return res.status(404).json({ message: 'unknown error' });
+    }
+
+    admin.users.push(newUser._id);
+    await admin.save();
+    
 
     console.log('User registered successfully:', newUser);
 

@@ -7,4 +7,6 @@ router.post('/login',loginUser);
 router.post('/logout',authMiddleware,logoutUser)
 router.get('/profile',authMiddleware,userProfile);
 
+
+
 module.exports = router;
