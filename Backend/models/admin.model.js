@@ -29,7 +29,8 @@ const adminSchema = new mongoose.Schema({
         enum: ['admin', 'superadmin'],
         default: 'admin'
     },
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
 });
 
 adminSchema.methods.generateAuthToken = function () {
