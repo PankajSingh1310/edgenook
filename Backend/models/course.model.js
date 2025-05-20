@@ -6,26 +6,6 @@ const courseSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  plans: [
-    {
-      name: {       // Example: "₹499 Plan", "₹999 Plan"
-        type: String,
-        required: true,
-      },
-      price: {
-        type: Number,
-        required: true,
-      },
-      description: {
-        type: String,  // Clear description of what's included
-        required: true,
-      },
-      features: [String],  // List of features like certificate, offer letter, etc.
-      enrollUrl: {
-        type: String,  // Link or endpoint for enrolling
-      }
-    }
-  ],
   modules: [
     {
       title: String,  // Module title, e.g. "Introduction", "Advanced Topics"
