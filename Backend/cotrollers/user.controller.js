@@ -35,7 +35,7 @@ module.exports.registerUser = async (req, res) => {
 
     await newUser.save();
 
-    const admin = await adminModel.findOne({ email: adminEmail });
+    const admin = await adminModel.findOne({ adminEmail });
     if(!admin) {
       return res.status(404).json({ message: 'unknown error' });
     }
