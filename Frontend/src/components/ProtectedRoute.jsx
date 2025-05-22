@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import userContext from "../context/user.context";
 
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
-  const { setIsLoggedIn, setUserData } = useContext(userContext);
+  const { setIsLoggedIn, setUserData,isLoggedIn } = useContext(userContext);
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
@@ -45,7 +45,11 @@ const ProtectedRoute = ({ children }) => {
     };
 
     verifyUser();
-  }, [navigate, setIsLoggedIn, setUserData]);
+  }, [navigate, setIsLoggedIn, setUserData,isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (isChecking) {
     return <div className="text-center p-10">Checking authentication...</div>;
