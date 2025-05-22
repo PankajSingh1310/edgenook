@@ -1,5 +1,6 @@
 const adminModel = require('../models/admin.model');
 const courseModel = require('../models/course.model');
+const userModel = require('../models/user.model');
 const mongoose = require('mongoose');
 
 module.exports.adminLogin = async (req,res) => {
@@ -197,3 +198,38 @@ module.exports.deleteCourse = async (req, res) => {
   }
 }
   
+
+module.exports.deleteUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Validate userId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    // Find the user
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Delete the user from the User collection
+    await userModel.findByIdAndDelete(userId);
+
+    // Remove user reference from admin's users array
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL;
+    const admin = await adminModel.findOne({ adminEmail });
+    if (admin) {
+      admin.users = admin.users.filter(u => u.toString() !== userId);
+      await admin.save();
+    }
+
+    console.log('User deleted successfully:', user);
+    res.status(200).json({ message: 'User deleted successfully' });
+
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

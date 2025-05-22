@@ -1,0 +1,55 @@
+{
+  "hash": "42040278",
+  "configHash": "7975c2c9",
+  "lockfileHash": "4875445c",
+  "browserHash": "d83901ea",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "6be639a4",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "41342abd",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "d5a5a7f8",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "5202c408",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "43cb0dad",
+      "needsInterop": false
+    },
+    "@radix-ui/react-avatar": {
+      "src": "../../node_modules/@radix-ui/react-avatar/dist/index.mjs",
+      "file": "@radix-ui_react-avatar.js",
+      "fileHash": "ddf1f785",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-5HNGYYSW": {
+      "file": "chunk-5HNGYYSW.js"
+    },
+    "chunk-TVFQMRVC": {
+      "file": "chunk-TVFQMRVC.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
