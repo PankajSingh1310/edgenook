@@ -9,7 +9,7 @@ const adminSchema = new mongoose.Schema({
         trim: true,
         minlength: [3, "Name must be at least 3 characters long"],
     },
-    email:{
+    adminEmail:{
         type: String,
         required: true,
         unique: true,
