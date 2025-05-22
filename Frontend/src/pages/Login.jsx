@@ -55,7 +55,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center  px-4 py-10">
       <Card className="w-full max-w-md rounded-2xl shadow-xl">
         <CardContent className="p-8 space-y-6">
           <h2 className="text-3xl font-semibold text-center text-blue-600">

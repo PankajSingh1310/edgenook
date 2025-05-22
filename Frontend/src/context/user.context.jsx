@@ -13,7 +13,7 @@ export const useUser = () => {
 export const UserState = ({ children }) => { 
     const [userData, setUserData] = useState(null);
     const [token, setToken] = useState(null);
-    const [isLoggedIn, setzIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [error, setError] = useState(null);
 
     return (
