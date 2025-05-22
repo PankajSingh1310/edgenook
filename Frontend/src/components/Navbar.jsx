@@ -19,7 +19,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // const [activeNav, setActiveNav] = useState("Home");
   const uniqueId = useId();
-  const {isLoggedIn, setIsLoggedIn,userData} = useContext(userContext);
+  const { isLoggedIn, setIsLoggedIn, userData } = useContext(userContext);
   const navItems = [
     { label: "Home", to: "/home" },
     { label: "About", to: "/about" },
@@ -77,7 +77,7 @@ const Navbar = () => {
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
-       
+
         {!isLoggedIn ? (
           <>
             <Button variant="outline" asChild>
@@ -90,11 +90,18 @@ const Navbar = () => {
             </Button>
           </>
         ) : (
-          <p className="text-sm font-medium text-zinc-700 dark:text-white">
-            {userData.fullname.firstname} {userData.fullname.lastname}
-          </p>
+          <>
+            <p className="text-sm font-medium text-zinc-700 dark:text-white">
+              {userData.fullname.firstname} {userData.fullname.lastname}
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/profile">Profile</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link to="/logout">Logout</Link>
+            </Button>
+          </>
         )}
-
 
         {/* <Button variant="outline" asChild>
           <Link to="/login" className="flex items-center gap-1">
@@ -155,22 +162,21 @@ const Navbar = () => {
           </Menubar>
 
           {!isLoggedIn ? (
-          <>
-            <Button variant="outline" asChild>
-              <Link to="/login" className="flex items-center gap-1">
-                <LogIn className="w-4" /> Login
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/signup">Sign up</Link>
-            </Button>
-          </>
-        ) : (
-          <p className="text-sm font-medium text-zinc-700 dark:text-white">
-            {userData.fullname.firstname} {userData.fullname.lastname}
-          </p>
-        )}
-
+            <>
+              <Button variant="outline" asChild>
+                <Link to="/login" className="flex items-center gap-1">
+                  <LogIn className="w-4" /> Login
+                </Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link to="/signup">Sign up</Link>
+              </Button>
+            </>
+          ) : (
+            <p className="text-sm font-medium text-zinc-700 dark:text-white">
+              {userData.fullname.firstname} {userData.fullname.lastname}
+            </p>
+          )}
         </div>
       )}
     </div>
