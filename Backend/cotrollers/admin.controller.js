@@ -87,7 +87,6 @@ module.exports.userLists = async (req, res) => {
     }
   };
 
-
 module.exports.createCourse = async (req, res) => {
   const { avatar, title, description, modules, duration, studentsGet } = req.body;
 
