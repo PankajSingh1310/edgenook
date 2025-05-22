@@ -23,7 +23,7 @@ const Signup = () => {
     phone: "",
   });
 
-  const {setUserData, setToken,setIsLoggedIn} = useContext(userContext);
+  const {setUserData,setIsLoggedIn} = useContext(userContext);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -79,12 +79,10 @@ const Signup = () => {
         const data = response.data;
         console.log("Signup successful:", data);
         setUserData(data.user);
-        setToken(data.token);
         localStorage.setItem("token", JSON.stringify(data.token));
         alert("Signup successful!");
         setIsLoggedIn(true);
         navigate("/home");
-
         setFormData({
           firstname: "",
           lastname: "",

@@ -7,10 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import userContext from "@/context/user.context";
+import { set } from "react-hook-form";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUserData, setToken } = useContext(userContext);
+  const { setUserData , setIsLoggedIn} = useContext(userContext);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -40,8 +41,8 @@ const Login = () => {
       const response = await axios.post("/api/user/login", formData);
       if (response.status === 200) {
         const { user, token } = response.data;
-        setUserData(user);
-        setToken(token);
+        setUserData(user);  
+        setIsLoggedIn(true);
         localStorage.setItem("token", JSON.stringify(token));
         alert("Login successful!");
         navigate("/home");

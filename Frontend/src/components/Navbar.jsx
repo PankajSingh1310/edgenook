@@ -14,17 +14,22 @@ import {
 } from "@/components/ui/menubar";
 import { ModeToggle } from "./ui/mode-toggle";
 import userContext from "@/context/user.context";
+import LogoutButton from "./Logout";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // const [activeNav, setActiveNav] = useState("Home");
   const uniqueId = useId();
-  const {isLoggedIn, setIsLoggedIn,userData} = useContext(userContext);
+  const { isLoggedIn, setIsLoggedIn, userData } = useContext(userContext);
   const navItems = [
     { label: "Home", to: "/home" },
     { label: "About", to: "/about" },
     { label: "Contact us", to: "/contact" },
   ];
+  const handleMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+  
 
   return (
     <div className="w-full px-5 py-3 flex items-center justify-between shadow-md">
@@ -77,7 +82,7 @@ const Navbar = () => {
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
-       
+
         {!isLoggedIn ? (
           <>
             <Button variant="outline" asChild>
@@ -90,11 +95,16 @@ const Navbar = () => {
             </Button>
           </>
         ) : (
-          <p className="text-sm font-medium text-zinc-700 dark:text-white">
-            {userData.fullname.firstname} {userData.fullname.lastname}
-          </p>
+          <>
+            <p className="text-sm font-medium text-zinc-700 dark:text-white">
+              {userData.fullname.firstname} {userData.fullname.lastname}
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/profile">Profile</Link>
+            </Button>
+            <LogoutButton/>
+          </>
         )}
-
 
         {/* <Button variant="outline" asChild>
           <Link to="/login" className="flex items-center gap-1">
@@ -129,7 +139,7 @@ const Navbar = () => {
               to={item.to}
               onClick={() => {
                 setActiveNav(item.label);
-                setIsMobileMenuOpen(false);
+                handleMenuClose();
               }}
               className={({ isActive }) =>
                 `w-full text-left px-3 py-2 rounded-md ${
@@ -147,9 +157,9 @@ const Navbar = () => {
             <MenubarMenu>
               <MenubarTrigger className="px-0">Plan & Pricing</MenubarTrigger>
               <MenubarContent className="ml-[-1rem]">
-                <MenubarItem>499 plan</MenubarItem>
+                <MenubarItem onClick={handleMenuClose}>499 plan</MenubarItem>
                 <MenubarSeparator />
-                <MenubarItem>999 plan</MenubarItem>
+                <MenubarItem onClick={handleMenuClose}>999 plan</MenubarItem>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -157,20 +167,25 @@ const Navbar = () => {
           {!isLoggedIn ? (
           <>
             <Button variant="outline" asChild>
-              <Link to="/login" className="flex items-center gap-1">
+              <Link to="/login" onClick={handleMenuClose}>
                 <LogIn className="w-4" /> Login
               </Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link to="/signup">Sign up</Link>
+              <Link to="/signup" onClick={handleMenuClose}>Sign up</Link>
             </Button>
           </>
         ) : (
-          <p className="text-sm font-medium text-zinc-700 dark:text-white">
-            {userData.fullname.firstname} {userData.fullname.lastname}
-          </p>
+          <>
+            <p className="text-sm font-medium text-zinc-700 dark:text-white">
+              {userData.fullname.firstname} {userData.fullname.lastname}
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/profile" onClick={handleMenuClose}>Profile</Link>
+            </Button>
+            <LogoutButton onLogout={handleMenuClose} />
+          </>
         )}
-
         </div>
       )}
     </div>
