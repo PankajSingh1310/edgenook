@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 
 const Contact = () => {
   return (
-    <div className="w-full px-6 py-10 lg:px-20 dark:bg-black dark:text-white text-zinc-800">
+    <div className="w-full px-6 py-10 lg:px-20 dark:bg-black dark:text-white text-zinc-800 rounded-md">
       {/* Header */}
       <section className="text-center max-w-3xl mx-auto">
         <h1 className="text-4xl lg:text-5xl font-bold mb-4">We'd Love to Hear From You</h1>

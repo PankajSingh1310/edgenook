@@ -43,7 +43,7 @@ module.exports.registerUser = async (req, res) => {
     await admin.save();
     
 
-    console.log('User registered successfully:', newUser);
+    // console.log('User registered successfully:', newUser);
 
     const token = newUser.generateAuthToken();
     if (!token) {
@@ -56,7 +56,7 @@ module.exports.registerUser = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ message: 'User registered successfully' ,user: newUser, token });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).json({ message: 'Internal server error' });

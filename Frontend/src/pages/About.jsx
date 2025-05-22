@@ -2,7 +2,7 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="w-full px-6 py-10 lg:px-20 dark:bg-black dark:text-white text-zinc-800">
+    <div className="w-full px-6 py-10 lg:px-20 dark:bg-black dark:text-white text-zinc-800 rounded-md">
       {/* Hero Section */}
       <section className="text-center max-w-4xl mx-auto">
         <h1 className="text-4xl lg:text-5xl font-bold mb-4">Empowering Learners Everywhere</h1>

@@ -121,6 +121,7 @@ const Navbar = () => {
 
       {/* Hamburger menu button (mobile) */}
       <div className="lg:hidden flex items-center">
+      <ModeToggle className="bg-transparent hover:bg-transparent border-none shadow-none" />
         <Button
           variant="ghost"
           size="icon"

@@ -70,13 +70,13 @@ const CourseCarousel = () => {
   const [courses] = useState(dummyCourses);
 
   return (
-    <section className="w-full py-10 px-6 bg-gray-50 dark:bg-black">
+    <section className="w-full py-10 px-6 bg-gray-50 dark:bg-black ">
       <h2 className="text-2xl font-semibold mb-6">Popular Courses</h2>
       <div className="flex overflow-x-auto space-x-4 scrollbar-hide">
         {courses.map(course => (
           <div
             key={course._id}
-            className="min-w-[250px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex-shrink-0"
+            className="min-w-[250px] bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 flex-shrink-0"
           >
             <img
               src={course.image}
