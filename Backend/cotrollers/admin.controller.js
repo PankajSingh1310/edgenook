@@ -271,3 +271,34 @@ module.exports.verifyEnrollment = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+module.exports.getPendingEnrollments = async (req, res) => {
+  try {
+    const enrollments = await enrollmentModel.find({ status: 'processing' }).populate('userId courseId');
+    if (!enrollments || enrollments.length === 0) {
+      return res.status(404).json({ message: 'No pending enrollments found' });
+    }
+
+    res.status(200).json({ message: 'Pending enrollments fetched successfully', enrollments });
+
+  } catch (error) {
+    console.error('Error fetching pending enrollments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+module.exports.getEnrollments = async (req, res) => {
+  try {
+    const enrollments = await enrollmentModel.find().populate('userId courseId');
+    if (!enrollments || enrollments.length === 0) {
+      return res.status(404).json({ message: 'No enrollments found' });
+    }
+
+    res.status(200).json({ message: 'Enrollments fetched successfully', enrollments });
+
+  } catch (error) {
+    console.error('Error fetching enrollments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
