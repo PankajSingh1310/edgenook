@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { adminLogin, adminLogout, userLists, createCourse, updateCourse, deleteCourse, deleteUser } = require("../cotrollers/admin.controller");
+const { adminLogin, adminLogout, userLists, createCourse, updateCourse, deleteCourse, deleteUser, verifyEnrollment } = require("../cotrollers/admin.controller");
 const { isAdmin } = require("../middleware/auth.middleware");
 
 router.post('/login', adminLogin);
@@ -9,5 +9,6 @@ router.post('/course',isAdmin, createCourse);
 router.post('/course/update/:courseId', isAdmin, updateCourse);
 router.post('/course/delete/:courseId', isAdmin, deleteCourse);
 router.post('/user/delete/:userId', isAdmin, deleteUser);
+router.put('/enrollments/verify/:enrollmentId', isAdmin, verifyEnrollment);
 
 module.exports = router;
