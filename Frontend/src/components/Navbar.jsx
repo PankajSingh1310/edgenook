@@ -113,7 +113,7 @@ const Navbar = () => {
             <Button variant="outline" asChild>
               <Link to="/profile">Profile</Link>
             </Button>
-            <LogoutButton/>
+            <LogoutButton/> 
           </>
         )}
 

@@ -13,7 +13,9 @@ import SingleCourse from "./pages/SingleCourse";
 import Enroll from "./pages/Enroll";
 import AdminHome from "./pages/Admin/AdminHome";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
-import Unauthorized from "./pages/Unauthorized";
+import Unauthorized from "./pages/Admin/Unauthorized";
+import CreateCourse from "./pages/Admin/CreateCourse";
+import EditCourse from "./pages/Admin/EditCourse";
 
 function App() {
   return (
@@ -38,6 +40,16 @@ function App() {
         <Route path="/admin/dashboard" element={
           <ProtectedAdminRoute>
             <AdminHome />
+          </ProtectedAdminRoute>
+        } />
+        <Route path="/admin/course" element={
+          <ProtectedAdminRoute>
+            <CreateCourse />
+          </ProtectedAdminRoute>
+        } />
+        <Route path="/admin/course/edit/:id" element={
+          <ProtectedAdminRoute>
+            <EditCourse />
           </ProtectedAdminRoute>
         } />
         <Route path="/unauthorized" element={<Unauthorized/>} />
