@@ -24,7 +24,6 @@ const CourseCarousel = () => {
   return (
     <section className="w-full py-10 px-6 bg-gray-50 dark:bg-black">
       <h2 className="text-2xl font-semibold mb-6">Popular Courses</h2>
-
       {loading ? (
         <p className="text-gray-500 dark:text-gray-300">Loading...</p>
       ) : courses.length === 0 ? (
