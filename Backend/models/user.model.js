@@ -72,10 +72,12 @@ const userSchema = new mongoose.Schema(
     //   type: String,
     //   default: "default.jpg",
     // },
-    course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
-    },
+    courses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      }
+    ],
   },
   { timestamps: true }
 );

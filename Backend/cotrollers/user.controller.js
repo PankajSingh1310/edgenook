@@ -1,6 +1,8 @@
 const adminModel = require('../models/admin.model');
 const blacklistTokenModel = require('../models/blacklistToken.model');
 const userModel = require('../models/user.model');
+const courseModel = require('../models/course.model');
+const enrollmentModel = require('../models/enrollment.model');
 
 module.exports.registerUser = async (req, res) => {
 
@@ -136,6 +138,54 @@ module.exports.userProfile = async (req, res) => {
     
   } catch (error) {
     console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+// POST /api/enrollments/request/:courseId
+module.exports.requestEnrollment = async (req, res) => {
+  const { courseId } = req.params;
+  const { utr } = req.body;
+  
+  try {
+    const course = await courseModel.findById(courseId);
+    const user = await userModel.findById(req.user._id);
+
+    if (!course || !user) {
+      return res.status(404).json({ message: 'User or Course not found' });
+    }
+
+    // Check for existing pending or approved enrollments
+    const existing = await enrollmentModel.findOne({ userId: user._id, courseId });
+    if (existing) {
+      return res.status(400).json({ message: 'Enrollment already in process or completed' });
+    }
+
+    await enrollmentModel.create({
+      userId: user._id,
+      courseId,
+      utr,
+      status: 'processing',
+    });
+
+    res.status(200).json({ message: 'Enrollment request submitted, pending verification' });
+  } catch (error) {
+    console.error('Enrollment request error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+module.exports.getEnrolledCourses = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id).populate('courses');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ courses: user.courses });
+  } catch (error) {
+    console.error('Error fetching enrolled courses:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 }

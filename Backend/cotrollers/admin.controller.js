@@ -1,6 +1,7 @@
 const adminModel = require('../models/admin.model');
 const courseModel = require('../models/course.model');
 const userModel = require('../models/user.model');
+const enrollmentModel = require('../models/enrollment.model');
 const mongoose = require('mongoose');
 
 module.exports.adminLogin = async (req,res) => {
@@ -250,3 +251,71 @@ module.exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+// PUT /api/enrollments/verify/:enrollmentId
+module.exports.verifyEnrollment = async (req, res) => {
+  const { enrollmentId } = req.params;
+  const { status } = req.body; // 'approved' or 'rejected'
+
+  try {
+    const enrollment = await enrollmentModel.findById(enrollmentId);
+    if (!enrollment) {
+      return res.status(404).json({ message: 'Enrollment not found' });
+    }
+
+    if (status === 'approved') {
+      const user = await userModel.findById(enrollment.userId);
+      const course = await courseModel.findById(enrollment.courseId);
+
+      // Push course into user and user into course
+      if (!user.courses.includes(course._id)) user.courses.push(course._id);
+      if (!course.users.includes(user._id)) course.users.push(user._id);
+
+      await user.save();
+      await course.save();
+
+      enrollment.status = 'success';
+    } else {
+      enrollment.status = 'failed';
+    }
+
+    await enrollment.save();
+    res.status(200).json({ message: `Enrollment ${status}` });
+
+  } catch (error) {
+    console.error('Error verifying enrollment:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+module.exports.getPendingEnrollments = async (req, res) => {
+  try {
+    const enrollments = await enrollmentModel.find({ status: 'processing' }).populate('userId courseId');
+    if (!enrollments || enrollments.length === 0) {
+      return res.status(404).json({ message: 'No pending enrollments found' });
+    }
+
+    res.status(200).json({ message: 'Pending enrollments fetched successfully', enrollments });
+
+  } catch (error) {
+    console.error('Error fetching pending enrollments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+module.exports.getEnrollments = async (req, res) => {
+  try {
+    const enrollments = await enrollmentModel.find().populate('userId courseId');
+    if (!enrollments || enrollments.length === 0) {
+      return res.status(404).json({ message: 'No enrollments found' });
+    }
+
+    res.status(200).json({ message: 'Enrollments fetched successfully', enrollments });
+
+  } catch (error) {
+    console.error('Error fetching enrollments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}

@@ -30,10 +30,12 @@ const courseSchema = new mongoose.Schema({
     samples: [String]      // URLs or file paths to sample files/previews (PDF, images, etc.)
   },
 
-  users:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
+  users:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
 
   createdAt: { type: Date, default: Date.now }
 });
