@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LogIn, Menu, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useId } from "react";
 import {
   Menubar,
@@ -18,11 +18,11 @@ import LogoutButton from "./Logout";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // const [activeNav, setActiveNav] = useState("Home");
+  const location = useLocation();
   const uniqueId = useId();
   const { isLoggedIn, setIsLoggedIn, userData } = useContext(userContext);
   const navItems = [
-    { label: "Home", to: "/home" },
+    { label: "Home", to: "/" },
     { label: "About", to: "/about" },
     { label: "Contact us", to: "/contact" },
   ];
@@ -30,6 +30,17 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
   
+  useEffect(() => {
+    const currentNav = navItems.find(item => location.pathname.startsWith(item.to));
+    if (currentNav) {
+      setActiveNav(currentNav.label);
+    }
+  }, [location.pathname]);
+
+  const [activeNav, setActiveNav] = useState(() => {
+    const currentNav = navItems.find(item => location.pathname.startsWith(item.to));
+    return currentNav ? currentNav.label : "Home";
+  });
 
   return (
     <div className="w-full px-5 py-3 flex items-center justify-between shadow-md">

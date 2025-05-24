@@ -7,12 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import userContext from "@/context/user.context";
-import { set } from "react-hook-form";
+import adminContext from "@/context/admin.context";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUserData , setIsLoggedIn} = useContext(userContext);
-
+  const { setUserData,setIsLoggedIn } = useContext(userContext);
+  const { setAdminData,setIsAdminLoggedIn } = useContext(adminContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,17 +35,40 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
+  
     setLoading(true);
     try {
-      const response = await axios.post("/api/user/login", formData);
+      let emailToUse = formData.email;
+      const isAdmin = emailToUse.toLowerCase().includes("admin");
+      if (emailToUse.toLowerCase().startsWith("admin ")) {
+        emailToUse = emailToUse.split(" ")[1];
+      } else if (emailToUse.toLowerCase().startsWith("admin")) {
+        emailToUse = emailToUse.slice(5);
+      }
+      
+      const loginRoute = isAdmin ? "/api/admin/login" : "/api/user/login";
+      const response = await axios.post(loginRoute, {
+        email: emailToUse,
+        password: formData.password,
+      });
+  
       if (response.status === 200) {
         const { user, token } = response.data;
-        setUserData(user);  
-        setIsLoggedIn(true);
+        if(user.role === "admin") {
+          localStorage.setItem("Admintoken", JSON.stringify(token));
+        } else {
         localStorage.setItem("token", JSON.stringify(token));
+        }
         alert("Login successful!");
-        navigate("/home");
+        if (user.role === "admin") {
+          setAdminData(user);
+          setIsAdminLoggedIn(true);
+          navigate("/admin/dashboard");
+        } else {
+          setUserData(user);
+          setIsLoggedIn(true);
+          navigate("/");
+        }
       }
     } catch (err) {
       console.error("Login failed:", err.response?.data?.message || err.message);
@@ -54,6 +77,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center  px-4 py-10">

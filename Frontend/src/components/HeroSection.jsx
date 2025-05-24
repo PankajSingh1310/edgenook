@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -10,7 +11,7 @@ const Hero = () => {
         Discover thousands of courses taught by expert instructors and start your journey today.
       </p>
       <button className="mt-8 px-8 py-3 shadow-2xl dark:bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition">
-        Explore Courses
+        <Link to="/courses">Explore Courses</Link>
       </button>
     </section>
   );

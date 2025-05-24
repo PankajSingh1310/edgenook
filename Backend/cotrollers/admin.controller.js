@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 
 module.exports.adminLogin = async (req,res) => {
     try {
-        const {adminEmail , password} = req.body;
-
+        const {email , password} = req.body;
+        const adminEmail = email;
         if(!adminEmail || !password) {
             return res.status(400).json({
                 message: "All fields are required"
@@ -14,15 +14,16 @@ module.exports.adminLogin = async (req,res) => {
         }
 
         const admin = await adminModel.findOne({adminEmail}).select('+password');
+
         if(!admin) {
             return res.status(400).json({
-                message: "Invalid email or password"
+                message: "Invalid email or password 1"
             })
         }
         const isMatch = await admin.comparePassword(password);
         if(!isMatch) {
             return res.status(400).json({
-                message: "Invalid email or password"
+                message: "Invalid email or password 2"
             })
         }
         const token = admin.generateAuthToken();
@@ -36,9 +37,10 @@ module.exports.adminLogin = async (req,res) => {
             secure: process.env.NODE_ENV === 'production',
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         })
-        req.admin = admin;
+        req.user = admin;
         res.status(200).json({
             message: "Login successful",
+            user : admin,
             token
         })
     } catch (error) {
@@ -61,6 +63,21 @@ module.exports.adminLogout = async (req,res) => {
             error: error.message
         })
     }
+}
+
+module.exports.adminProfile = async (req, res) => {
+  try {
+    console.log(req.user);
+    const user = await adminModel.findById(req.user._id).select('-password -__v');
+    if (!user) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+    res.status(200).json({ user });
+    // console.log('Admin profile fetched successfully:', user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 module.exports.userLists = async (req, res) => {

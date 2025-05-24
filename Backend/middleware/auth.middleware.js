@@ -47,7 +47,7 @@ module.exports.isAdmin = async (req, res, next) => {
         if (user.role !== 'admin') {
             return res.status(403).json({ message: 'Forbidden' });
         }
-        req.admin = user;
+        req.user = user;
         next();
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -82,7 +82,7 @@ const Signup = () => {
         localStorage.setItem("token", JSON.stringify(data.token));
         alert("Signup successful!");
         setIsLoggedIn(true);
-        navigate("/home");
+        navigate("/");
         setFormData({
           firstname: "",
           lastname: "",

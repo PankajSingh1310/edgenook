@@ -10,15 +10,12 @@ const courseSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-<<<<<<< HEAD
-=======
 
   description: {
     type: String,  // Clear description of what's included
     required: true,
   },
 
->>>>>>> 460addc35ae1239e90f4e745c568730664fc198f
   modules: [
     {
       title: String,  // Module title, e.g. "Introduction", "Advanced Topics"
