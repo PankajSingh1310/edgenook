@@ -73,8 +73,6 @@ const Signup = () => {
 
     try {
       const response = await axios.post("/api/user/register", newUser);
-
-      // console.log("Response:", response);
       if (response.status === 201) {
         const data = response.data;
         console.log("Signup successful:", data);

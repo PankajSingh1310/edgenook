@@ -14,7 +14,6 @@ const Courses = () => {
         console.error('Error fetching courses:', error);
       }
     };
-
     fetchCourses();
   }, []);
 

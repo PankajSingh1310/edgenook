@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ModeToggle } from "@/components/ui/mode-toggle";
@@ -86,7 +86,7 @@ const AdminHome = () => {
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [courses,users,adminData]);
 
   if (loading) return <p className="p-4">Loading admin data...</p>;
 

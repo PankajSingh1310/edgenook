@@ -9,7 +9,7 @@ const CourseCarousel = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/courses"); // update URL if needed
+        const res = await axios.get("/api/courses"); 
         setCourses(res.data.courses);
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -38,7 +38,7 @@ const CourseCarousel = () => {
               className="min-w-[250px] bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 flex-shrink-0 hover:shadow-2xl transition-shadow"
             >
               <img
-                src={course.image || "https://via.placeholder.com/400x225"}
+                src={course.avatar}
                 alt={course.title}
                 className="h-40 w-full object-cover rounded-md"
               />
